@@ -10,6 +10,20 @@ For spheres:
 
   - spheresample(dim,samplesize,noisemultiplier) will generate a point cloud sampled from S^dim of size samplesize, with Gaussian radial noise of mean 0 and standard deviation noisemultiplier.
 
+  - To get spheres of arbitrary radius, use the command
+    
+    spheresampler(dim,rad,samplesize,noisemultiplier);
+
+  - To visualize your samples, use:
+
+    plotsphere(points,radius)
+
+    where points is the output from spheresample (or spheresampler), and radius is the radius.  
+    
+    - This will plot the points, as well as a circle or sphere of correct radius.  
+    - For circles, it will plot all points and a complete circle.  
+    - For spheres, it will plot only a hemisphere and its corresponding points, as this is easier to see.
+
   - For example, if we want to sample 100 points from a 2-sphere (i.e. a circle) with radial noise of stdev 0.1, the following code will do this:
 
       cl={};
