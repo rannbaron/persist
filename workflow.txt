@@ -1,4 +1,4 @@
-To begin, enter the directory into which the files were unzipped.  You will need to put the appropriate m_hungarian.?????? files into the means subdirectory if they're not there already.  This file will have been created when the hungarian library was compiled.
+To begin, enter the directory into which the files were unzipped.
 
 To set up the needed variables, run the following command:
   
