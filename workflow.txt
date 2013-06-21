@@ -1,0 +1,105 @@
+To begin, enter the directory into which the files were unzipped.  You will need to put the appropriate m_hungarian.?????? files into the means subdirectory if they're not there already.  This file will have been created when the hungarian library was compiled.
+
+To set up the needed variables, run the following command:
+  
+  setup
+  
+You may now proceed to test the suite as detailed below.
+
+For spheres:
+
+  - spheresample(dim,samplesize,noisemultiplier) will generate a point cloud sampled from S^dim of size samplesize, with Gaussian radial noise of mean 0 and standard deviation noisemultiplier.
+
+  - For example, if we want to sample 100 points from a 2-sphere (i.e. a circle) with radial noise of stdev 0.1, the following code will do this:
+
+      cl={};
+      for i=1:10
+	cl{1,i}=spheresample(2,100,0.1);
+      end
+      
+  - We can then generate the 1-D persistence diagrams of each of these samples (change J in the line clpers{1,i}=J; to I to get 0-D):
+
+    clpers={};
+    for i=1:10
+      [I J]=compTopoPC(cl{1,i},max(pdist(cl{1,i})));
+      clpers{1,i}=J;
+    end
+  
+  - Note: max(pdist(cl{1,i})) is the maximum pairwise distance between two points in the given point cloud.  There are other reasonable choices for the bound on the edge length, of course!
+
+  - Then compute the mean of the diagrams:
+
+    m = PersistenceMean(clpers,0.1,0.01);
+  
+Note: The function 'PersistenceMean' takes a cell of persistence diagrams, a diagonal thickening parameter epsilon (0.1 in this case), and a stopping condition zigzag (0.01 in this case).  All points of distance less than epsilon from the diagonal will get swallowed into the diagonal.  The gradient descent algorithm will stop when the difference between the candidate mean and the last candidate mean is less than zigzag.  See the function documentation for details.
+
+  - Plot the diagrams and mean:
+    
+    meanPlot(clpers,m)
+
+For signals:
+
+  - CRUCIAL NOTE: data for signals needs to be in a n by 1 _column_ matrix.  If it's a row, transpose it before inputting into the function.
+
+  - The function RawToPersistenceCell(raw_data, sample_size, dim_start, dim_end, num_samples, signal_image) takes the raw data (raw_data input variable), and returns a cell array.  This cell array consists of one row with an entry for each dimension between dim_start and dim_end (in practice, dimension = number of points per sliding window).  Each of these entries consists of the 0- and 1-D persistence diagrams for each of num_samples samples of size sample_size from the point cloud generated in R^dimension from sliding windows on raw_data.
+
+  - It's easiest to illustrate this with an example:
+
+    - The file noisyperiodic.mat contains data sampled from a periodic function with some noise added.  Open it.
+    
+    - run the command:
+
+      cl=RawToPersistenceCell(noisy',50,10,12,7,'signal');
+
+    - Note that noisy is transposed here!
+
+    - Once this completes, open the variable cl and examine it:
+    
+      - Each cell is a given dimension.  In this case, cl{1:1} is the 10-D information, cl{1:2} the 11-D, and cl{1:3} the 12-D.
+      
+      - Open cl{1:1} and examine it:
+      
+	- There are 7 columns
+	
+	- Each column consists of the 0- and 1-D diagrams for a sample of size 50 from the point cloud generated in R^10 from the signal.
+	
+      - To get a cell containing all 1-D persistence diagrams in dimension 11, execute:
+	
+	A=cl{1,2}(2,:);
+      
+  - To take the mean of a cell of diagrams, use the function PersistenceMean.  See previous section on spheres for details.
+  
+For images:
+
+  - This is very similar to signals above, so I will only document the differences.
+
+  - Suppose we have a file called 'cute-dog2.jpg' in the current directory.
+
+  - Read the file into an array by executing:
+    
+    A=imread('cute-dog2.jpg');
+    
+  - If the file is not greyscale, convert it to greyscale by executing:
+
+    A=rgb2gray(A);
+    
+  - Just to be safe, make sure that A consists of doubles:
+    
+    A=double(A);
+    
+  - We now use RawToPersistenceCell to mask the image into R^(n*m), where n=dim_start and m=dim_end (note that the meaning of dim_start and dim_end have changed!):
+
+    cl=RawToPersistenceCell(A,50,3,3,20,'image');
+    
+    - As above, this will generate a 1 by 1 cell.  cl{1,1} is consists 0- and 1-D persistence diagrams for each of 20 samples (of 50 points each) from the point cloud generated from the image by taking 3 by 3 masks (i.e. in R^9).
+
+Plotting persistence diagrams:
+
+  - If A is a persistence diagram, plot it as follows:
+
+      hold on;
+      plot(A(:,1),A(:,2),'.');
+      plot([0:0.1:1],[0:0.1:1]);
+      hold off;
+    
+  - Note that the second-to-last line in the preceding command block plots 0->1 on both the x and y axes.  This can be changed, of course.

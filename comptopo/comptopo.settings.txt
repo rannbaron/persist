@@ -1,0 +1,83 @@
+###-------------------------------------------------
+### Input parameter settings file for 
+###
+###       COMPutational
+###        TOPOlogy tool
+###
+### CompTopo is licensed from Duke University.
+### Copyright (c) 2012-13 by John Harer.
+### All rights reserved.
+###
+### Settings file consistent with version 0.0.0
+###-------------------------------------------------
+
+###-------------------------------------------------
+### Project information
+###-------------------------------------------------
+
+project =             computational topology sandbox
+user =                                          test
+dataset =             	   one of the test data sets
+notes =          point cloud computed points in file
+
+
+###-------------------------------------------------
+### Task and Algorithm selection
+###-------------------------------------------------
+
+workflowChoice =                                   #  B  #   B   # A  # timeSeries
+#taskChoice =                                     M12
+algorithmChoice =                                     M12
+
+###-------------------------------------------------
+### Algorithm component specifications
+###-------------------------------------------------
+
+
+##for creating local neighborhood based on distance or nunber of points
+computeLocalNeighborhoodBy =                numberOfPoints  #   distance  # numberOfPoints
+radiusBoundForLocalNeighborhood =                0.9
+pointsPerLocalNeighborhood =                     100
+centerPointsForLocalNeighborhoodsFile =     D2_1.txt
+pointCloudForLocalNeighborhoodsFile =         D2.txt
+
+pointCloudFile =          pc_200.txt   #         pc_300.txt  # D2_10.txt   # 
+
+
+# for computing the local spherical distance matrix
+#pointcloudForSphDistMatrixFile =                nearestPointsByDist_1.txt  ## can't change this yet (else workflow breaks)!!!
+radiusBoundForSphericalDistance =                0.45  
+
+
+
+
+# for creating set of edges from point cloud (M12 alg.)
+distanceBoundOnEdges =			         10
+
+
+###-------------------------------------------------
+### Metric selection
+###-------------------------------------------------
+
+metricChoice =                                    L2
+p_valueForLpMetric =                               2
+
+
+###-------------------------------------------------
+### Diagram related output
+###-------------------------------------------------
+
+#pythonPlotCommandsFile = 
+0DintervalsFile =            0D_intervals.txt  #   0Dintervals.@TS@.txt
+1DintervalsFile =           1D_intervals.txt  #    1Dintervals.@TS@.txt
+1DdiagramFile =                       1Dpic.@TS@.png
+
+
+###-------------------------------------------------
+### Input and output locations
+###-------------------------------------------------
+
+inputDirectory =      data/input
+outputDirectory =    data/output
+reportFile =                 results_D2_d=0.5-NEW.@TS@.txt
+
